@@ -3,6 +3,8 @@ package com.workintech.s18d4;
 import com.workintech.s18d4.entity.Account;
 import com.workintech.s18d4.entity.Address;
 import com.workintech.s18d4.entity.Customer;
+import com.workintech.s18d4.exceptions.AccountException;
+import com.workintech.s18d4.exceptions.CustomerException;
 import com.workintech.s18d4.repository.AccountRepository;
 import com.workintech.s18d4.repository.AddressRepository;
 import com.workintech.s18d4.repository.CustomerRepository;
@@ -335,10 +337,13 @@ class MainTest {
     }
 
     @Test
-    @DisplayName("AccountService::delete notfound")
+    @DisplayName("AccountService::delete not found")
     void testDeleteNotFoundAccount_AccountService() {
         when(mockAccountRepository.findById(anyLong())).thenReturn(Optional.empty());
-        assertNull(accountService.delete(1L));
+
+        assertThrows(AccountException.class, () -> {
+            accountService.delete(1L);
+        });
     }
 
 
@@ -380,6 +385,9 @@ class MainTest {
     @DisplayName("CustomerService::delete - Customer not found")
     void testDeleteNotFoundCustomer() {
         when(mockCustomerRepository.findById(anyLong())).thenReturn(Optional.empty());
-        assertNull(customerService.delete(1L));
+
+        assertThrows(CustomerException.class, () -> {
+            customerService.delete(1L);
+        });
     }
 }
